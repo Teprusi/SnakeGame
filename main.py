@@ -4,7 +4,6 @@ from food import Food
 from scoreboard import Scoreboard
 import time
 
-# Changes made by ronaldo
 
 snake = Snake()
 food = Food()
