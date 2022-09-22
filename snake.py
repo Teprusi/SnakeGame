@@ -1,51 +1,59 @@
 from turtle import Turtle
-DOWN = 270
+STARTING_POSITIONS = [(0, 0), (-20, 0), (-40, 0)]
+MOVE_DISTANCE = 20
 UP = 90
+DOWN = 270
 LEFT = 180
 RIGHT = 0
 
 
 class Snake:
-    def __init__(self):
-        self.part = 0
-        self.segments = []
-        for x in range(3):
-            self.add_segment()
 
+    def __init__(self):
+        self.segments = []
+        self.create_snake()
         self.head = self.segments[0]
 
-    def add_segment(self):
-        new_turtle = Turtle(shape='square')
-        new_turtle.color('white')
-        new_turtle.penup()
-        new_turtle.back(self.part)
-        self.part += 20
-        self.segments.append(new_turtle)
+    def create_snake(self):
+        for position in STARTING_POSITIONS:
+            self.add_segment(position)
+
+    def add_segment(self, position):
+        new_segment = Turtle("square")
+        new_segment.color("white")
+        new_segment.penup()
+        new_segment.goto(position)
+        self.segments.append(new_segment)
+
+    def reset(self):
+        for part in self.segments:
+            part.goto(1000, 1000)
+        self.segments.clear()
+        self.create_snake()
+        self.head = self.segments[0]
 
     def extend(self):
-        new_turtle = Turtle(shape='square')
-        new_turtle.color('white')
-        new_turtle.penup()
-        new_turtle.goto(self.segments[-1].position())
-        self.segments.append(new_turtle)
+        self.add_segment(self.segments[-1].position())
 
     def move(self):
-        for segment_n in range(len(self.segments) - 1, 0, -1):
-            self.segments[segment_n].goto(self.segments[segment_n - 1].pos())
-        self.segments[0].forward(20)
-    
+        for seg_num in range(len(self.segments) - 1, 0, -1):
+            new_x = self.segments[seg_num - 1].xcor()
+            new_y = self.segments[seg_num - 1].ycor()
+            self.segments[seg_num].goto(new_x, new_y)
+        self.head.forward(MOVE_DISTANCE)
+
     def up(self):
         if self.head.heading() != DOWN:
-            self.head.seth(UP)
+            self.head.setheading(UP)
 
     def down(self):
         if self.head.heading() != UP:
-            self.head.seth(DOWN)
+            self.head.setheading(DOWN)
 
     def left(self):
         if self.head.heading() != RIGHT:
-            self.head.seth(LEFT)
+            self.head.setheading(LEFT)
 
     def right(self):
         if self.head.heading() != LEFT:
-            self.head.seth(RIGHT)
+            self.head.setheading(RIGHT)
